@@ -1,0 +1,36 @@
+class Solution {
+    
+     void dfs(int u, ArrayList<ArrayList<Integer>> g, boolean[] vis) {
+        if(vis[u]==true) return ;
+        vis[u] = true;
+        for (int v : g.get(u)) dfs(v, g, vis);
+    }
+    
+    public int makeConnected(int n, int[][] connections) {
+        if (connections.length < n - 1) return -1; 
+        int count=0;
+      
+        ArrayList<ArrayList<Integer>> g = new ArrayList<ArrayList<Integer>>();
+        for(int i=0;i<n;i++){
+            g.add(new ArrayList<Integer>());
+        }
+        
+        for(int i=0;i<connections.length;i++){
+            
+            g.get(connections[i][0]).add(connections[i][1]);
+            g.get(connections[i][1]).add(connections[i][0]);
+            
+        }
+        
+        boolean[] vis = new boolean[n];
+        
+        for(int i=0;i<n;i++){
+            if(vis[i]==false){
+                count++;
+                dfs(i,g,vis);
+            }
+        }
+        return count-1;
+        
+    }
+}
