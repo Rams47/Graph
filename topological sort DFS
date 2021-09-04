@@ -86,7 +86,6 @@ class Solution
         while(!st.isEmpty()) {
             topo[ind++] = st.pop();
         }
-        // for(int i = 0;i<N;i++) System.out.println(topo[i] + " "); 
         return topo; 
     }
 }
