@@ -1,0 +1,107 @@
+package gp;
+
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Ex {
+
+	static class Node {
+	    int v;
+	    int weight;
+	 
+	    Node(int _v, int _w)
+	    {
+	      v = _v;
+	      weight = _w;
+	    }
+	    int getV() { return v; }
+	    int getWeight() { return weight; }
+	  }
+	  
+	   static void topologicalSortUtil(ArrayList<ArrayList<Node>> adj,int v, boolean visited[],
+	                             Stack<Integer> stack)
+	    {
+	      visited[v] = true;
+	 
+	      for (int i = 0; i<adj.get(v).size(); i++) {
+	        Node node = adj.get(v).get(i);
+	        if (!visited[node.getV()])
+	          topologicalSortUtil(adj,node.getV(), visited, stack);
+	      }
+	 
+	      stack.push(v);
+	    }
+	  
+	    static void longestPath(ArrayList<ArrayList<Node>> adj,int s){
+	        Stack<Integer> stack = new Stack<Integer>();
+	        int n = adj.size();
+	        int dist[] = new int[n];
+	        
+	        boolean visited[] = new boolean[n];
+	        for (int i = 0; i < n; i++)
+	          visited[i] = false;
+	        
+	        for (int i = 0; i < n; i++){
+	        if (visited[i] == false){
+	          topologicalSortUtil(adj,i, visited, stack);
+	            
+	        }
+	        }
+	        
+	        for (int i = 0; i < n; i++)
+	        dist[i] = Integer.MIN_VALUE;
+	 
+	       dist[s] = 0;
+	        
+	        while (stack.isEmpty() == false)
+	      {
+	        
+	        int u = stack.peek();
+	        stack.pop();
+	 
+	        if (dist[u] != Integer.MIN_VALUE)
+	        {
+	          for (int i = 0; i<adj.get(u).size(); i++)
+	          {
+	            Node node = adj.get(u).get(i);
+	            if (dist[node.getV()] < dist[u] + node.getWeight())
+	              dist[node.getV()] = dist[u] + node.getWeight();
+	          }
+	        }
+	      }
+	        
+	        for (int i = 0; i < n; i++) {
+	        if(dist[i] == Integer.MIN_VALUE)
+	          System.out.print("INF ");
+	      else
+	        System.out.print(dist[i] + " ");}
+	    }
+	        
+	    
+	    
+		public static void main (String[] args) {
+			int n = 6;
+			ArrayList<ArrayList<Node>> obj = new ArrayList<ArrayList<Node>>();
+			
+			for (int i=0;i<n ;i++ ){
+			    obj.add(new ArrayList<Node>());
+			} 
+			
+			obj.get(0).add(new Node(1,5));
+			obj.get(0).add(new Node(2,3));
+			obj.get(1).add(new Node(3,6));
+			obj.get(1).add(new Node(2,2));
+			obj.get(2).add(new Node(4,4));
+			obj.get(2).add(new Node(5,2));
+			obj.get(2).add(new Node(3,7));
+			obj.get(3).add(new Node(5,1));
+			obj.get(3).add(new Node(4,-1));
+			obj.get(4).add(new Node(5,-2));
+			
+			int s = 1;
+	    System.out.print("Following are longest distances from source vertex "+ s + " \n" );
+	    longestPath(obj,s);
+	    
+	    
+		}
+}
