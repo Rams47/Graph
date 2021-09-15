@@ -1,0 +1,103 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    /*
+     * Complete the 'journeyToMoon' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. INTEGER n
+     *  2. 2D_INTEGER_ARRAY astronaut
+     */
+     
+     static long dfs(ArrayList<ArrayList<Integer>> adj,int node,int[] vis){
+         vis[node] = 1;
+         long c = 0;
+         c++;
+         for(Integer it: adj.get(node)){
+             if(vis[it]==0){
+                 c+= dfs(adj,it,vis);
+                }
+            }
+         return c;
+        }
+
+    public static long journeyToMoon(int n, List<List<Integer>> astronaut) {
+    // Write your code here
+    long ans=0;
+    long sum = 0;
+    
+    ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+    for(int i=0;i<n;i++){
+        adj.add(new ArrayList<Integer>());
+    }
+    
+    int vis[] = new int[n];
+    long count[] = new long[n];
+    
+    for(int i=0;i<astronaut.size();i++){
+        adj.get(astronaut.get(i).get(0)).add(astronaut.get(i).get(1));
+        adj.get(astronaut.get(i).get(1)).add(astronaut.get(i).get(0));
+    }
+    
+    for(int i=0;i<n;i++){
+       if(vis[i] == 0){
+           count[i] = dfs(adj,i,vis);
+       }
+    }
+    
+    for(int i=0;i<n;i++){
+        ans += sum*count[i];
+        sum += count[i];
+    }
+    return ans;
+
+    }
+
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int n = Integer.parseInt(firstMultipleInput[0]);
+
+        int p = Integer.parseInt(firstMultipleInput[1]);
+
+        List<List<Integer>> astronaut = new ArrayList<>();
+
+        IntStream.range(0, p).forEach(i -> {
+            try {
+                astronaut.add(
+                    Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                        .map(Integer::parseInt)
+                        .collect(toList())
+                );
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        long result = Result.journeyToMoon(n, astronaut);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
