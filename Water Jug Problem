@@ -1,0 +1,151 @@
+package fourfifty;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class ThreeEightNine {
+	
+	
+	// This 2d use as a hashmap
+    // to keep track of already visited
+    // values and avoid repeatation
+	
+	// queue to maintain states
+	
+	// Initialing with initial state
+	// Initialing with initial state
+	
+	//enter in loop of queue
+	
+	// current state
+	// pop off used state
+	
+	//base cases
+	// doesn't met jug constraints
+	// if this state is already visited
+	
+	// filling the vector for constructing
+    // the solution path
+	
+	// marking current state as visited
+	
+	// if we reach solution state, put ans=1
+	// fill final state
+	// print the solution path
+	
+	// if we have not reached final state
+    // then, start developing intermediate
+    // states to reach solution state
+	
+	// fill Jug2
+	// fill Jug1
+	
+	// pour amount ap from Jug2 to Jug1
+	// check if this state is possible or not
+	 // Pour amount ap from Jug 1 to Jug2
+	// check if this state is possible or not
+	
+	// Empty Jug2
+	// Empty Jug1
+	
+	// No, solution exists if ans=0
+	
+	class pair{
+		int first,second;
+		
+		pair(int f,int s){
+			first = f;
+			second = s;
+		}
+	}
+	
+	private void BFS(int a, int b, int target) {
+
+		int[][] vis = new int[1000][1000];
+		for(int[] i: vis) {
+			Arrays.fill(i, -1);
+		}
+		
+		boolean isSolvable = false;
+		ArrayList<pair> ans = new ArrayList<pair>();
+		
+		Queue<pair> q = new LinkedList<pair>();
+		q.add(new pair(0,0));
+		
+		while(!q.isEmpty()) {
+			
+			pair u = q.peek();
+			q.poll();
+			
+			if ((u.first > a || u.second > b ||u.first < 0 || u.second < 0))
+	                continue;
+			
+			if(vis[u.first][u.second]>-1)
+				continue;
+			
+			ans.add(new pair(u.first,u.second));
+			vis[u.first][u.second] = 1;
+			
+			if(u.first == target || u.second == target) {
+				isSolvable = true;
+				
+				if(u.first == target) {
+					if(u.second != 0)
+					 ans.add(new pair(u.first,0));
+				}
+				else {
+					if(u.first != 0)
+					 ans.add(new pair(0,u.second));
+				}
+				
+				int sz = ans.size();
+				for(int i=0;i<sz;i++) {
+					System.out.println("("+ans.get(i).first+","+ans.get(i).second+")");
+				}
+				break;
+			}
+			
+			q.add(new pair(u.first,a));
+			q.add(new pair(b,u.second));
+			
+			for(int ap = 0;ap <= Math.max(a, b);ap++) {
+				
+				int c = u.first+ap;
+				int d = u.second-ap;
+				
+				if(c == a || (d == 0 && d>0)) {
+					q.add(new pair(c,d));
+				}
+				
+				c = u.first - ap;
+                d = u.second + ap;
+                
+                if ((c == 0 && c >= 0) || d == b)
+                    q.add(new pair( c, d ));
+			}
+			q.add(new pair(a,0));
+			q.add(new pair(0,b));
+			
+			if (!isSolvable)
+	           System.out.print("No solution");
+			
+		}
+		
+	}
+
+	public static void main(String args[])
+    {
+        int Jug1 = 4, Jug2 = 3, target = 2;
+ 
+        System.out.println("Path from initial state " +
+                "to solution state ::");
+ 
+        ThreeEightNine object = new ThreeEightNine();
+ 
+        object.BFS(Jug1, Jug2, target);
+ 
+    }
+
+}
