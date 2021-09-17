@@ -1,0 +1,100 @@
+package fourfifty;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+public abstract class ThreeNineThree {
+	
+	static class Node implements Comparator<Node>{
+		int v,w;
+		
+		Node(){}
+		Node(int v,int w){
+			this.v = v;
+			this.w = w;
+		}
+		@Override
+		public int compare(Node o1, Node o2) {
+			if(o1.w>o2.w)
+				return 1;
+			if(o2.w>o1.w)
+				return -1;
+			
+			return 0;
+		}
+		
+		
+	}
+
+	private static int getMinEdgeReversal(ArrayList<ArrayList<Integer>> adj, int n, int x, int y) {
+		ArrayList<ArrayList<Node>> adjx = new ArrayList<ArrayList<Node>>();
+		for (int i = 0; i < n; i++) {
+			adjx.add(new ArrayList<Node>());
+		}
+		
+		for(int i=0;i<n;i++) {
+			for(Integer it: adj.get(i)) {
+				adjx.get(i).add(new Node(it,0));
+				adjx.get(it).add(new Node(i,1));
+			}
+		}
+		
+		int ans[] = new int[n];
+		Arrays.fill(ans, Integer.MAX_VALUE);
+		
+		PriorityQueue<Node> pq = new PriorityQueue<Node>(n,new Node());
+		pq.add(new Node(x,0));
+		
+		ans[x] = 0;
+		
+		while(!pq.isEmpty()) {
+			
+			Node u = pq.peek();
+			pq.poll();
+			
+			for(Node it: adjx.get(u.v)) {
+				if(ans[u.v]+it.w<ans[it.v]) {
+					ans[it.v] = ans[u.v]+it.w;
+					pq.add(new Node(it.v,ans[it.v]));
+				}
+			}
+			
+		}
+		
+
+		return ans[y]-1;
+	}
+
+	public static void main(String[] args) {
+		int n = 7;
+		ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
+		for (int i = 0; i < n; i++) {
+			adj.add(new ArrayList<Integer>());
+		}
+
+		// 0, 1
+		adj.get(0).add(1);
+		// 2, 1
+		adj.get(2).add(1);
+		// 2, 3
+		adj.get(3).add(2);
+		// 5, 1
+		adj.get(5).add(1);
+		// 4, 5
+		adj.get(4).add(5);
+		// 6, 4
+		adj.get(6).add(4);
+		// 6, 3
+		adj.get(6).add(3);
+
+		int minEdgeToReverse = getMinEdgeReversal(adj, n, 0, 6);
+		if (minEdgeToReverse != -1)
+	        System.out.println(minEdgeToReverse);
+	    else
+	        System.out.println("Not possible");
+
+	}
+
+}
