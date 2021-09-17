@@ -1,0 +1,120 @@
+package fourfifty;
+
+import java.util.ArrayList;
+
+public class ThreeNinetyOne {
+	
+	static class Node{
+		int v;
+		int w;
+		Node(int v,int w){
+			this.v = v;
+			this.w = w;
+		}
+	}
+	
+	private static boolean pathMoreThanK(int src, int k,ArrayList<ArrayList<Node>> adj) {
+		int n = adj.size();
+		boolean vis[] = new boolean[n];
+		
+		vis[src] = true;
+		return pathMoreThanKUtil(src,k,adj,vis);
+	}
+
+	private static boolean pathMoreThanKUtil(int src, int k, ArrayList<ArrayList<Node>> adj, boolean[] vis) {
+		
+		if(k<=0)
+			return true;
+		
+		for(Node it: adj.get(src)) {
+			
+			int v = it.v;
+			int w = it.w;
+			
+			if(vis[v] == true)
+				continue;
+			
+			if(k<=w)
+				return true;
+			
+			vis[v] = true;
+			
+			if(pathMoreThanKUtil(v,k-w,adj,vis)) {
+				return true;
+			}
+			vis[v] = false;
+			
+		}
+		
+		return false;
+	}
+
+	public static void main(String[] args) {
+		int n = 9;
+		ArrayList<ArrayList<Node>> adj = new ArrayList<ArrayList<Node>>();
+		
+		for(int i=0;i<n;i++) {
+			adj.add(new ArrayList<Node>());
+		}
+		
+		//0, 1, 4
+		adj.get(0).add(new Node(1,4)); 
+		
+		//0, 7, 8
+		adj.get(0).add(new Node(7,8)); 
+		
+		//1, 2, 8
+		adj.get(1).add(new Node(2,8)); 
+		
+		//1, 7, 11
+		adj.get(1).add(new Node(7,11)); 
+		
+		//2, 3, 7
+		adj.get(2).add(new Node(3,7)); 
+		
+		//2, 8, 2
+		adj.get(2).add(new Node(8,2)); 
+		
+		//2, 5, 4
+		adj.get(2).add(new Node(5,4)); 
+		
+		//3, 4, 9
+		adj.get(3).add(new Node(4,9)); 
+		
+		//3, 5, 14
+		adj.get(3).add(new Node(5,14)); 
+		
+		//4, 5, 10
+		adj.get(4).add(new Node(5,10)); 
+		
+		//5, 6, 2
+		adj.get(5).add(new Node(6,2)); 
+		
+		//6, 7, 1
+		adj.get(6).add(new Node(7,1)); 
+		
+		//6, 8, 6
+		adj.get(6).add(new Node(8,6)); 
+		
+		//7, 8, 7
+		adj.get(7).add(new Node(8,7)); 
+		
+		
+		int src = 0;
+	    int k = 62;
+	 
+	    if(pathMoreThanK(src, k,adj))
+	      System.out.println("YES");
+	    else
+	      System.out.println("NO");
+	 
+	 
+	    k = 40;
+	    if(pathMoreThanK(src, k,adj))
+	      System.out.println("YES");
+	    else
+	      System.out.println("NO");
+	 
+	  }
+
+}
